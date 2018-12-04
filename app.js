@@ -6,49 +6,9 @@ GAME RULES:
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
-
-
-//setter
-document.querySelector('#current-' + activePlayer).innerHTML = '<em>'+dice+'</em>';
-
-//getter
-var x = document.querySelector('#score-0').textContent;
-
-//styling
-document.querySelector('.dice').style.display = 'none';
-
-//Die roll
-dice = Math.floor(Math.random() * 6) + 1;
-
-//Event handler
-document.querySelector('.btn-roll').addEventListener('click', fnctn);
-//document.querySelector('.btn-roll').addEventListener('click', function(){
-//  1. Randome number
-//  2. Display the result
-//      document.querySelector('.dice').style.display = 'block';
-//  3. Update the round score IF roll not 1
-//  4. 
-//});
-
-//Select dice img
-var diceDOM = document.querySelector('.dice');
-diceDOM.style.display = 'block';
-diceDOM.src = 'dice-'+dice+'.png';
-
-//getElementById
-document.getElementById('score-0').textContent = '0';
 */
-/*activePlayer = {
-    id: 0,
 
-    currentScoreDom: document.getElementById('current-0'),
-    scoreDom: document.getElementById('score-0'),
-
-    switchPlayer: function () {
-        this.id === 0 ? this.id = 1 : this.id = 0;
-    }
-}*/
-
+//Global variables
 var activePlayer = 0;
 var scores = [0, 0];
 var currentScore = 0;
@@ -65,12 +25,10 @@ var dice = {
     roll: function () {
         this.value = Math.floor(Math.random() * 6) + 1;
         this.DOM.src = 'dice-' + this.value + '.png';
-        //document.getElementById('score-'+activePlayer).textContent += this.value;
     }
 }
 
-//document.querySelector('#current-' + activePlayer).textContent = dice.value;
-
+//Switch Players - reset current score and toggle active panels
 function playerSwitch() {
     currentScore = 0;
     document.getElementById('current-'+activePlayer).textContent = '0';
@@ -81,6 +39,7 @@ function playerSwitch() {
 
 }
 
+//Check if the roll is a 1 - switch players if 1
 function checkRoll() {
  
     if (dice.value === 1) {
@@ -91,6 +50,8 @@ function checkRoll() {
     currentScore += dice.value;
 }
 
+
+//Clears the board to the default set up
 function clearBoard() {
     document.getElementById('score-0').textContent = '0';
     document.getElementById('score-1').textContent = '0';
@@ -111,6 +72,7 @@ function clearBoard() {
 
 }
 
+//Check if there is a winner (returns true) - notify players and stop the game
 function checkScore() {
 
     if (scores[activePlayer] >= 100) {
@@ -120,31 +82,39 @@ function checkScore() {
         document.querySelector('.btn-roll').style.display = 'none';
         activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
         document.querySelector('#name-' + activePlayer).textContent = 'Piggie!';
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
+//On click of Roll - roll the die and check outcome
 document.querySelector('.btn-roll').addEventListener('click', function () {
+    //Make sure the die is visible
     dice.show();
     dice.roll();
     checkRoll();
+    //Update the score
     document.querySelector('#current-' + activePlayer).textContent = currentScore;
 })
 
+//On click hold - save the player's score and check if they won, if not switch players
 document.querySelector('.btn-hold').addEventListener('click', function () {
     scores[activePlayer] += currentScore;
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+
     if (checkScore()) {
+        //Finish the game loop if winner occurred
         return;
     }
     
     playerSwitch();
 })
 
+//On click new game - reset everything to default
 document.querySelector('.btn-new').addEventListener('click', function () {
     clearBoard();
 })
 
+//Initialise with defaults
 clearBoard();
 
