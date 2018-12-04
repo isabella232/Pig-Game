@@ -6,12 +6,16 @@ GAME RULES:
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
+
+-EXTRA RULES
+-Two 6's in a row lose the players ENTIRE SCORE
 */
 
 //Global variables
 var activePlayer = 0;
 var scores = [0, 0];
 var currentScore = 0;
+var prevRoll = 0;
 
 var dice = {
     value: 1,
@@ -47,6 +51,16 @@ function checkRoll() {
         playerSwitch();
         return;
     }
+    if (dice.value === 6 && prevRoll === 6) {
+
+        scores[activePlayer] = 0;
+        document.getElementById('score-' + activePlayer).textContent = '0';
+        playerSwitch();
+        return;
+
+    }
+
+    prevRoll = dice.value;
     currentScore += dice.value;
 }
 
@@ -70,6 +84,12 @@ function clearBoard() {
     document.querySelector('.player-0-panel').classList.remove('winner');
     document.querySelector('.player-1-panel').classList.remove('winner');
 
+    document.querySelector('.player-name-0').style.display = 'none';
+    document.querySelector('.player-name-1').style.display = 'none';
+
+    document.querySelector('.rules-panel').style.display = 'none';
+    document.querySelector('.final-score').style.display = 'block';
+
 
     dice.hide();
 
@@ -78,7 +98,12 @@ function clearBoard() {
 //Check if there is a winner (returns true) - notify players and stop the game
 function checkScore() {
 
-    if (scores[activePlayer] >= 10) {
+    var finalScore = document.querySelector('.final-score').value;
+    if (!finalScore) {
+        finalScore = 100;
+    }
+
+    if (scores[activePlayer] >= finalScore) {
         //Active Player Won - Display Winner and Hide all
         document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
@@ -97,6 +122,8 @@ function checkScore() {
 document.querySelector('.btn-roll').addEventListener('click', function () {
     //Make sure the die is visible
     dice.show();
+    //Hide the final score block
+    document.querySelector('.final-score').style.display = 'none';
     dice.roll();
     checkRoll();
     //Update the score
@@ -116,20 +143,45 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     playerSwitch();
 })
 
+// On click rules
+document.querySelector('.btn-rules').addEventListener('click', function () {
+    //Show rules
+    document.querySelector('.rules-panel').style.display = 'block';
+})
+// On click exit rules
+document.querySelector('.btn-exit-rules').addEventListener('click', function () {
+    //Hide rules
+    document.querySelector('.rules-panel').style.display = 'none';
+})
+
 //On double click enter names
 document.querySelector('#name-0').addEventListener('dblclick', function () {
-    var name = prompt('Enter name');
-    document.querySelector('#name-0').textContent = name;
+    document.querySelector('.player-name-0').style.display = 'block';
+    document.querySelector('.player-name-0').focus()
+    document.querySelector('.player-name-0').addEventListener('blur', function () {
+         
+        var name0 = document.querySelector('.player-name-0').value;
+        if (!name0) name0 = 'Player 1';
+
+        document.querySelector('#name-0').textContent = name0;
+        document.querySelector('.player-name-0').style.display = 'none';
+    })
 })
 document.querySelector('#name-1').addEventListener('dblclick', function () {
-    var name = prompt('Enter name');
-    document.querySelector('#name-1').textContent = name;
+    document.querySelector('.player-name-1').style.display = 'block';
+    document.querySelector('.player-name-1').focus()
+    document.querySelector('.player-name-1').addEventListener('blur', function () {
+         
+        var name1 = document.querySelector('.player-name-1').value;
+        if (!name1) name1 = 'Player 2';
+
+        document.querySelector('#name-1').textContent = name1;
+        document.querySelector('.player-name-1').style.display = 'none';
+    })
 })
 
 //On click new game - reset everything to default
-document.querySelector('.btn-new').addEventListener('click', function () {
-    clearBoard();
-})
+document.querySelector('.btn-new').addEventListener('click', clearBoard);
 
 //Initialise with defaults
 clearBoard();
