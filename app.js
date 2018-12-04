@@ -110,6 +110,16 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     playerSwitch();
 })
 
+//On double click enter names
+document.querySelector('#name-0').addEventListener('dblclick', function () {
+    var name = prompt('Enter name');
+    document.querySelector('#name-0').textContent = name;
+})
+document.querySelector('#name-1').addEventListener('dblclick', function () {
+    var name = prompt('Enter name');
+    document.querySelector('#name-1').textContent = name;
+})
+
 //On click new game - reset everything to default
 document.querySelector('.btn-new').addEventListener('click', function () {
     clearBoard();
