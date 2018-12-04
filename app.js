@@ -67,6 +67,9 @@ function clearBoard() {
  
     document.querySelector('.player-0-panel').classList.add('active');
     document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+
 
     dice.hide();
 
@@ -75,9 +78,12 @@ function clearBoard() {
 //Check if there is a winner (returns true) - notify players and stop the game
 function checkScore() {
 
-    if (scores[activePlayer] >= 100) {
+    if (scores[activePlayer] >= 10) {
         //Active Player Won - Display Winner and Hide all
         document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+
         document.querySelector('.btn-hold').style.display = 'none';
         document.querySelector('.btn-roll').style.display = 'none';
         activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
