@@ -28,14 +28,6 @@ var dice = {
     },
     roll: function () {
 
-        this.DOM.animate([
-            { transform: 'translateX(' + Math.floor((Math.random() * 20) - 3) + 'px)' },
-            { transform: 'translateY(' + Math.floor((Math.random() *20) -3) + 'px)' },           
-        ], {
-                duration: 100,
-                iterations: 1
-            });
-
         this.value = Math.floor(Math.random() * 6) + 1;
         this.DOM.src = 'dice-' + this.value + '.png';
     }
@@ -57,11 +49,25 @@ function playerSwitch() {
 function checkRoll() {
  
     if (dice.value === 1) {
+        dice.DOM.animate([
+            { transform: 'translateX(' + Math.floor((Math.random() * 20) - 3) + 'px)' },
+            { transform: 'translateY(' + Math.floor((Math.random() * 20) - 3) + 'px)' },
+        ], {
+                duration: 100,
+                iterations: 1
+            });
         
         playerSwitch();
         return;
     }
     if (dice.value === 6 && prevRoll === 6) {
+        dice.DOM.animate([
+            { transform: 'translateX(' + Math.floor((Math.random() * 20) - 3) + 'px)' },
+            { transform: 'translateY(' + Math.floor((Math.random() * 20) - 3) + 'px)' },
+        ], {
+                duration: 100,
+                iterations: 1
+            });
 
         scores[activePlayer] = 0;
         document.getElementById('score-' + activePlayer).textContent = '0';
