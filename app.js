@@ -27,6 +27,15 @@ var dice = {
         this.DOM.style.display = 'none';
     },
     roll: function () {
+
+        this.DOM.animate([
+            { transform: 'translateX(' + Math.floor((Math.random() * 20) - 3) + 'px)' },
+            { transform: 'translateY(' + Math.floor((Math.random() *20) -3) + 'px)' },           
+        ], {
+                duration: 100,
+                iterations: 1
+            });
+
         this.value = Math.floor(Math.random() * 6) + 1;
         this.DOM.src = 'dice-' + this.value + '.png';
     }
@@ -35,6 +44,7 @@ var dice = {
 //Switch Players - reset current score and toggle active panels
 function playerSwitch() {
     currentScore = 0;
+    prevRoll = 0;
     document.getElementById('current-'+activePlayer).textContent = '0';
     document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
@@ -122,6 +132,7 @@ function checkScore() {
 document.querySelector('.btn-roll').addEventListener('click', function () {
     //Make sure the die is visible
     dice.show();
+    
     //Hide the final score block
     document.querySelector('.final-score').style.display = 'none';
     dice.roll();
